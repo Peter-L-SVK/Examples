@@ -1,84 +1,80 @@
 use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+use std::process;
 
 fn main() {
-    println!("**********************************");
-    println!("Program riesi kvadraticke rovnice.");
-    println!("**********************************\n");   
-    println!("Zadaj clena a:");
+    println!("Guess the number!");
+    
+    let secret_number = rand::thread_rng().gen_range(1, 101);
+    const ROUNDS: usize = 7;
+    let mut number_of_guess = ROUNDS;
+    let mut logic: bool = true;
+    let mut v: Vec<u32> = Vec::with_capacity(ROUNDS);
+    
+    loop {
+        println!("You have {} tryes.", number_of_guess);
+        println!("Please input your guess. (To quit enter: quit)");
+        
+        let mut guess = String::new();
+        
+        io::stdin().read_line(&mut guess)
+            .expect("Failed to read line");
 
-    let mut a = String::new();
-
-    io::stdin().read_line(&mut a)
-        .expect("Failed to read line");
-
-    let a: f64 = match a.trim().parse() {
-        Ok(num) => num,
-        Err(_) => {
-            println!("Zle zadana hodnota!");
-            return;
-        },
-    };
-    println!("Zadaj clena b:");
-
-    let mut b = String::new();
-
-    io::stdin().read_line(&mut b)
-        .expect("Failed to read line");
-
-    let b: f64 = match b.trim().parse() {
-        Ok(num) => num,
-        Err(_) => {
-            println!("Zle zadana hodnota!");
-            return;
-        },
-    };
-    println!("Zadaj clena c:");
-
-    let mut c = String::new();
-
-    io::stdin().read_line(&mut c)
-        .expect("Failed to read line");
-
-    let c: f64 = match c.trim().parse() {
-        Ok(num) => num,
-        Err(_) => {
-            println!("Zle zadana hodnota!");
-            return;
-        },
-    };
-    println!("Je nacitana rovnica: {}x^2 + ({}x) + ({}) = 0\n", a, b, c);
-    if a == 0.0 {
-        if b == 0.0 {
-            if c == 0.0 {
-                println!("Rovnica ma nekonecne vela rieseni!");
-                return;
-            }
-            println!("Rovnica nema riesenie!");
-            return;
+        if guess.trim() == "quit" {
+            println!("Goodbye.");
+            break;
         }
-        let x = (-1.0 * c) / b;
-        println!("Rovnica je linearna a ma jedno riesenie: x = {}.",x);
-        return;
+        
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("Wrong input\n");
+                continue;
+            },
+        };
+        v.push(guess);
+        if number_of_guess < ROUNDS {
+            for index in 0..ROUNDS - number_of_guess {
+                if guess == v[index] {
+                    println!("You already tried this number!\n");
+                    logic = false;
+                    break;
+                }  
+                else {
+                    logic = true;
+                }
+            }
+        }
+        
+        if logic {
+            println!("You guessed: {}", guess);
+            match guess.cmp(&secret_number) {
+                Ordering::Less => {
+                    println!("Too small!\n");
+                    number_of_guess = control(number_of_guess);
+                },
+                Ordering::Greater => {
+                    println!("Too big!\n");
+                    number_of_guess = control(number_of_guess);
+                },
+                Ordering::Equal => {
+                    println!("You win!");
+                    break;
+                }
+            }
+        }        
+        else {
+            number_of_guess = control(number_of_guess);
+        }
     }
+}
 
-    let d: f64 = b.powf(2.0) - 4.0 * a * c;
-
-    if d > 0.0 {
-        let x1: f64 = (-1.0 * b + d.sqrt()) / (2.0 * a);
-        let x2: f64 = (-1.0 * b - d.sqrt()) / (2.0 * a);
-
-        println!("Riesenim kvadratickej rovnice su korene x1 = {} a x2 = {}", x1, x2);
+fn control(mut num_of_guess: usize) -> usize {
+    num_of_guess -= 1;
+    if num_of_guess <= 0 {
+        println!("Out of tryes.\nMaybe next time.");
+        process::exit(0x0100);
     }
-    else if d == 0.0 {
-        let xd = (-1.0 * b) / (2.0 * a);
-
-        println!("Riesenie je koren x1,2 = {}, tzv dvojnasobny koren.", xd);
-    }
-    else {
-        let d = -1.0 * d;
-        let xr = b / (2.0 * a);
-        let xi = d.sqrt() / (2.0 * a);
-
-        println!("Korene rovnice lezia v obore C (komplexnych cisel), xr = {}, xi = +/-{}.", xr, xi);
-    } 
+    return num_of_guess;
 }
