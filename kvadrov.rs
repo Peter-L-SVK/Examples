@@ -5,7 +5,6 @@ fn main() {
     println!("Program riesi kvadraticke rovnice.");
     println!("**********************************\n");   
     println!("Zadaj clena a:");
-
     let a = input();
     println!("Zadaj clena b:");
     let b =input();
