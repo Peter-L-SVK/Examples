@@ -1,2 +1,2 @@
 # Hello 
-this is rrepositary of example I have done
+this is repositary of examples I have done
