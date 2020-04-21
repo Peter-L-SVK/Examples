@@ -1,5 +1,5 @@
 use std::io;
-use std::process
+use std::process;
 
 fn main() {
     println!("**********************************");
