@@ -1,4 +1,5 @@
 use std::io;
+use std::process
 
 fn main() {
     println!("**********************************");
@@ -57,7 +58,7 @@ fn input() -> f64 {
         Ok(num) => num,
         Err(_) => {
             println!("Zle zadana hodnota!");
-            return 1.0;
+            process::exit(1);
         },
     };
         return i;
