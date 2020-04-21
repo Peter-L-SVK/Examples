@@ -22,6 +22,9 @@ fn main() {
     };
     
     match hodnota.cmp(&nula) {
+        Ordering::Less =>  {
+            println!("Faktorial je mozny iba pri kladnych celych cislach.");
+        },
         Ordering::Equal =>{
             println!("Faktorial 0 je 1.");
         },
@@ -34,10 +37,6 @@ fn main() {
                 pomocna *=  i + 1;
             }
             println!("Faktorial {} je {}.", hodnota, pomocna);
-        },
-        Ordering::Less =>  {
-            println!("Faktorial je mozny iba pri kladnych celych cislach.");
         }
-    
     }
 }
