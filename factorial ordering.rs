@@ -20,7 +20,6 @@ fn main() {
             process::exit(1);
         },
     };
-
     
     match hodnota.cmp(&nula) {
         Ordering::Equal =>{
